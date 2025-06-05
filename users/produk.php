@@ -1,13 +1,13 @@
 <?php
-session_start();
+//session_start();
 
 include "koneksi.php";
 
 
-if(!isset($_SESSION['id'])) {
-    header("location:login.php?pesan=logindulu");
-    exit;
-}
+//if(!isset($_SESSION['id'])) {
+//    header("location:login.php?pesan=logindulu");
+//    exit;
+//}
 
 
 

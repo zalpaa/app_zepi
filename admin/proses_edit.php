@@ -23,7 +23,7 @@ $foto_lama = $data_lama['foto'];
 
 // Cek apakah ada file foto baru yang diunggah
 if (!empty($_FILES['foto']['name'])) {
-    $target_dir = "uploads/";
+    $target_dir = "../uploads/";
     $nama_file_baru = time() . '_' . basename($_FILES["foto"]["name"]);
     $target_file = $target_dir . $nama_file_baru;
     $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
@@ -38,8 +38,8 @@ if (!empty($_FILES['foto']['name'])) {
     // Pindahkan file ke folder tujuan
     if (move_uploaded_file($_FILES["foto"]["tmp_name"], $target_file)) {
         // Hapus file lama jika ada
-        if (file_exists("uploads/" . $foto_lama) && $foto_lama != '') {
-            unlink("uploads/" . $foto_lama);
+        if (file_exists("../uploads/" . $foto_lama) && $foto_lama != '') {
+            unlink("../uploads/" . $foto_lama);
         }
         $nama_foto_final = $nama_file_baru;
     } else {
