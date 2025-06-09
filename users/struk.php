@@ -41,56 +41,155 @@ if (!$pesanan) {
 <head>
     <meta charset="UTF-8">
     <title>Struk Pembayaran</title>
-    <style>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+<style>
+    body {
+        font-family: 'Poppins', sans-serif;
+        background: #f0f4f8;
+        margin: 0;
+        padding: 0;
+        color: #333;
+    }
+
+    .container-card  {
+        max-width: 700px;
+        background: #fff;
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+        text-align: center;
+        color: #2c3e50;
+        margin-bottom: 20px;
+    }
+
+    .struk img {
+        width: 150px;
+        height: 150px;
+        object-fit: cover;
+        border-radius: 10px;
+        display: block;
+        margin: 0 auto 20px auto;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+    }
+
+    table td {
+        padding: 12px 8px;
+        border-bottom: 1px solid #eee;
+        font-size: 14px;
+    }
+
+    table td:first-child {
+        color: #555;
+        width: 40%;
+        font-weight: 500;
+    }
+
+    table td:last-child {
+        text-align: right;
+        color: #333;
+    }
+
+    .status {
+        display: inline-block;
+        padding: 5px 12px;
+        background-color: #3498db;
+        color: #fff;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    .bayar-btn {
+        display: block;
+        width: 100%;
+        text-align: center;
+        margin-top: 20px;
+        padding: 12px 0;
+        background: linear-gradient(to right, #27ae60, #2ecc71);
+        color: #fff;
+        text-decoration: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 600;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        transition: transform 0.2s ease, background 0.3s ease;
+    }
+
+    .bayar-btn:hover {
+        transform: translateY(-3px);
+        background: linear-gradient(to right, #2ecc71, #27ae60);
+    }
+
+    .bukti {
+        text-align: center;
+        margin-top: 25px;
+    }
+
+    .bukti img {
+        max-width: 300px;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    p.no-bukti {
+        color: red;
+        text-align: center;
+        font-weight: 500;
+        margin-top: 20px;
+    }
+
+    @media(max-width: 600px) {
         .container {
-            max-width: 700px;
-            margin: 50px auto;
+            margin: 20px;
             padding: 20px;
-            border: 1px solid #ddd;
-            border-radius: 10px;
-            background: #f9f9f9;
         }
-        .struk h2 {
-            text-align: center;
-        }
-        .struk img {
-            width: 120px;
+
+        table td {
             display: block;
-            margin: 10px auto;
-        }
-        .struk table {
             width: 100%;
-            border-collapse: collapse;
+            text-align: left;
+            border: none;
+            padding: 8px 0;
         }
-        .struk table td {
-            padding: 8px;
-            border-bottom: 1px solid #ddd;
+
+        table td:last-child {
+            text-align: left;
+            margin-top: -8px;
         }
-        .status {
-            font-weight: bold;
-            color: blue;
-        }
-        .bayar-btn {
-            display: inline-block;
-            margin-top: 20px;
-            padding: 8px 15px;
-            background-color: green;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-        }
-        .bukti {
-            text-align: center;
-            margin-top: 20px;
-        }
-        .bukti img {
-            max-width: 300px;
-            border: 1px solid #ddd;
-        }
-    </style>
+    }
+</style>
+
 </head>
 <body>
-    <div class="container">
+
+    
+<!-- Header -->
+<header class="bg-white fixed w-full shadow-md z-10">
+    <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+        <h1 class="text-2xl font-bold text-gray-800">FLAZ</h1>
+        <nav>
+            <ul class="flex space-x-6">
+                <li><a href="./home.php" class="text-gray-600 hover:text-gray-900">Home</a></li>
+                <li><a href="./produk.php" class="text-gray-600 hover:text-gray-900">Produk</a></li>
+                <li><a href="./about.php" class="text-gray-600 hover:text-gray-900">Tentang Kami</a></li>
+                <li><a href="./kontak.php" class="text-gray-600 hover:text-gray-900">Kontak</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+
+<div class="w-screen flex justify-center pt-20">
+        <div class="container-card w-full">
         <div class="struk">
             <h2>Struk Pembayaran</h2>
             <img src="../uploads/<?= $pesanan['foto'] ?>" alt="<?= $pesanan['nama_produk'] ?>">
@@ -135,5 +234,6 @@ if (!$pesanan) {
             <?php } ?>
         </div>
     </div>
+</div>
 </body>
 </html>

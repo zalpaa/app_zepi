@@ -3,22 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Login - Admin Panel</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            height: 100vh;
+            background: #f8f9fa;
+        }
+    </style>
 </head>
 <body>
-    <h1>Form Login</h1>
-    <form action="proses_login.php" method="post">
 
-        <label for="">Username</label><br>
-        <input type="text" name="username" id=""> <br>
+<div class="d-flex justify-content-center align-items-center vh-100">
+    <div class="card shadow p-4" style="width: 100%; max-width: 400px;">
+        <h3 class="text-center mb-4">Login</h3>
+        <form action="proses_login.php" method="post">
+            <div class="mb-3">
+                <label for="username" class="form-label">Username</label>
+                <input type="text" class="form-control" name="username" id="username" required>
+            </div>
 
-        <label for="">Password</label><br>
-        <input type="password" name="password" id=""> <br>
+            <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" class="form-control" name="password" id="password" required>
+            </div>
 
-        <input type="submit" value="Login"><br>
+            <div class="d-grid mb-3">
+                <button type="submit" class="btn btn-primary">Login</button>
+            </div>
 
-        <p>Belum punya akun?  <a href="register.php">register</a></p>
+            <p class="text-center">
+                Belum punya akun? <a href="register.php">Register</a>
+            </p>
+        </form>
+    </div>
+</div>
 
-    </form>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

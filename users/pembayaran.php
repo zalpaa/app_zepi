@@ -22,13 +22,20 @@ if (!$pemesanan) {
     exit;
 }
 
+// Ambil data metode pembayaran
+$metode_query = mysqli_query($koneksi, "SELECT * FROM metode_pembayaran");
+$metode_pembayaran = [];
+while($row = mysqli_fetch_assoc($metode_query)) {
+    $metode_pembayaran[] = $row;
+}
+
 // Proses form pembayaran
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $provider = $_POST['provider'];
-    $status = 'pending';
+    $id_metode_pembayaran = $_POST['id_metode_pembayaran'];
+    $status_pemesanan = 'pending';
     $status_pembayaran = 'menunggu konfirmasi';
 
-    // Upload file bukti
+    // Upload bukti pembayaran
     $bukti_name = $_FILES['bukti']['name'];
     $bukti_tmp = $_FILES['bukti']['tmp_name'];
     $bukti_ext = pathinfo($bukti_name, PATHINFO_EXTENSION);
@@ -37,10 +44,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     move_uploaded_file($bukti_tmp, '../uploads/' . $bukti_new);
 
     // Update status di pemesanan
-    $update = mysqli_query($koneksi, "UPDATE pemesanan SET status='$status' WHERE id_pemesanan='$id_pemesanan'");
+    $update = mysqli_query($koneksi, "UPDATE pemesanan SET status='$status_pemesanan' WHERE id_pemesanan='$id_pemesanan'");
 
     // Masukkan ke tabel pembayaran
-    $insert_bayar = mysqli_query($koneksi, "INSERT INTO pembayaran (id_pemesanan, provider, bukti_pembayaran, status) VALUES ('$id_pemesanan', '$provider', '$bukti_new', '$status_pembayaran')");
+    $insert_bayar = mysqli_query($koneksi, "INSERT INTO pembayaran (id_pemesanan, id_metode_pembayaran, bukti_pembayaran, status) VALUES ('$id_pemesanan', '$id_metode_pembayaran', '$bukti_new', '$status_pembayaran')");
 
     if ($update && $insert_bayar) {
         echo "<script>alert('Pembayaran berhasil. Silakan tunggu konfirmasi.'); window.location.href='riwayat_pesanan.php';</script>";
@@ -49,7 +56,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
     exit;
 }
-
 ?>
 
 <!DOCTYPE html>
@@ -58,15 +64,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <meta charset="UTF-8">
     <title>Pembayaran</title>
     <style>
-        .container {
-            max-width: 600px;
-            margin: 50px auto;
-            padding: 20px;
-            border: 1px solid #ddd;
-            border-radius: 10px;
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
         }
-        .container h1 {
+        .container-card {
+            max-width: 600px;
+            margin: 0 50px;
+            padding: 25px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .container-card h1 {
             text-align: center;
+            margin-bottom: 25px;
         }
         .produk {
             display: flex;
@@ -75,15 +88,47 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
         .produk img {
             width: 100px;
-            margin-right: 20px;
+            border-radius: 8px;
+            margin-right: 15px;
         }
         .form-group {
             margin-bottom: 15px;
         }
+        label {
+            font-weight: bold;
+        }
+        select, input[type="file"] {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #28a745;
+            color: white;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        .no-akun {
+            margin-top: 5px;
+            font-size: 0.9em;
+            color: #555;
+            display: none;
+        }
     </style>
 </head>
 <body>
-    <div class="container">
+     <?php
+        include ('./header.php');
+    ?>
+    <div class="pt-28 flex justify-center">
+    <div class="container-card">
         <h1>Pembayaran</h1>
 
         <div class="produk">
@@ -98,13 +143,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <form method="POST" enctype="multipart/form-data">
 
             <div class="form-group">
-                <label for="provider">Pilih provider Pembayaran:</label>
-                <select name="provider" id="provider" required>
+                <label for="id_metode_pembayaran">Pilih Metode Pembayaran:</label>
+                <select name="id_metode_pembayaran" id="id_metode_pembayaran" required onchange="tampilkanNoAkun()">
                     <option value="">--Pilih--</option>
-                    <option value="bca">BCA</option>
-                    <option value="bni">BNI</option>
-                    <option value="bri">BRI</option>
+                    <?php foreach($metode_pembayaran as $metode): ?>
+                        <option value="<?= $metode['id_metode_pembayaran'] ?>" data-noakun="<?= $metode['no_akun'] ?>">
+                            <?= strtoupper($metode['provider']) ?>
+                        </option>
+                    <?php endforeach; ?>
                 </select>
+                <div class="no-akun" id="no_akun"></div>
             </div>
             
             <div class="form-group">
@@ -115,5 +163,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <button type="submit">Konfirmasi Pembayaran</button>
         </form>
     </div>
+</div>
+
+    <script>
+        function tampilkanNoAkun() {
+            const select = document.getElementById('id_metode_pembayaran');
+            const selectedOption = select.options[select.selectedIndex];
+            const noAkun = selectedOption.getAttribute('data-noakun');
+            const noAkunDiv = document.getElementById('no_akun');
+
+            if(noAkun){
+                noAkunDiv.style.display = 'block';
+                noAkunDiv.innerHTML = "No. Akun: " + noAkun;
+            } else {
+                noAkunDiv.style.display = 'none';
+                noAkunDiv.innerHTML = "";
+            }
+        }
+    </script>
 </body>
 </html>
