@@ -166,10 +166,11 @@ $ukuran_options = ['M', 'L', 'XL', 'XXL'];
         const beliBtn = document.getElementById('beliBtn');
 
         ukuranSelect.addEventListener('change', function() {
-            const selectedUkuran = this.value;
-            keranjangBtn.href = `keranjang.php?id_produk=<?= $produk['id_produk'] ?>&ukuran=${selectedUkuran}`;
-            beliBtn.href = `checkout.php?id_produk=<?= $produk['id_produk'] ?>&beli=sekarang&ukuran=${selectedUkuran}`;
-        });
+    const selectedUkuran = this.value;
+    keranjangBtn.href = `tambah_keranjang.php?id_produk=<?= $produk['id_produk'] ?>&ukuran=${selectedUkuran}`;
+    beliBtn.href = `checkout.php?id_produk=<?= $produk['id_produk'] ?>&beli=sekarang&ukuran=${selectedUkuran}`;
+});
+
     </script>
 </body>
 </html>

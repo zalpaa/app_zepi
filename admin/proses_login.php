@@ -14,6 +14,6 @@ if (mysqli_num_rows($query) == 1) {
     exit;
 } else {
     header("location:login.php?login=gagal");
-    exit;
+exit;
 }
 ?>
