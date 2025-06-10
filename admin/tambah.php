@@ -79,11 +79,8 @@ $result = $koneksi->query($sql);
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label">Ketersediaan</label>
-                    <select name="ketersediaan" class="form-select" required>
-                        <option value="ya">Tersedia</option>
-                        <option value="tidak">Habis</option>
-                    </select>
+                    <label class="form-label">Stok</label><br>
+                    <input type="number" name="stok">
                 </div>
 
                 <div class="d-grid">

@@ -66,14 +66,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #f4f4f4;
-            padding: 20px;
         }
 
         .checkout-container {
-            max-width: 600px;
-            margin: 30px auto;
+            min-width: 600px;      
+            padding: 25px;      
             background: #fff;
-            padding: 25px;
             border-radius: 10px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
@@ -127,8 +125,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <?php
         include ('./header.php');
     ?>
-
+<div class="pt-20 flex justify-center">
 <div class="checkout-container">
+
     <h1>Checkout Produk</h1>
 
     <div class="product-info">
@@ -176,6 +175,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         <button type="submit">Proses Checkout</button>
     </form>
+</div>
 </div>
 
 </body>

@@ -91,12 +91,9 @@ $query_kategori = mysqli_query($koneksi, $sql_kategori);
                     </select>
                 </div>
 
-                <div class="mb-4">
-                    <label class="form-label">Ketersediaan</label>
-                    <select name="ketersediaan" class="form-select" required>
-                        <option value="ya" <?= $produk['ketersediaan'] == 'ya' ? 'selected' : '' ?>>Tersedia</option>
-                        <option value="tidak" <?= $produk['ketersediaan'] == 'tidak' ? 'selected' : '' ?>>Habis</option>
-                    </select>
+                 <div class="mb-3">
+                    <label class="form-label">Stok</label>
+                    <input type="number" name="stok" class="form-control" step="0.01" value="<?= $produk['stok'] ?>" required>
                 </div>
 
                 <div class="d-grid">

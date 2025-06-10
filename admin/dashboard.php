@@ -7,7 +7,8 @@ if(!isset($_SESSION['id'])) {
     exit;
 }
 
-$sql = "SELECT * FROM produk"; 
+$sql = "SELECT p.*, k.nama AS nama_kategori FROM produk p
+        LEFT JOIN kategori k ON p.id_kategori = k.id_kategori"; 
 $query = mysqli_query($koneksi, $sql); 
 ?>
 <!DOCTYPE html>
@@ -48,7 +49,7 @@ $query = mysqli_query($koneksi, $sql);
                     <th>Deskripsi</th>
                     <th>Harga</th>
                     <th>Ukuran</th>
-                    <th>Ketersediaan</th>
+                    <th>Stok</th>
                     <th>Aksi</th>
                 </tr>
             </thead>
@@ -56,7 +57,7 @@ $query = mysqli_query($koneksi, $sql);
                 <?php while ($produk = mysqli_fetch_assoc($query)) { ?>
                 <tr>
                     <td><?= $produk['id_produk'] ?></td>
-                    <td><?= $produk['id_kategori'] ?></td>
+                    <td><?= $produk['nama_kategori'] ?></td>
                     <td><?= $produk['nama'] ?></td>
                     <td>
                         <img src="../uploads/<?= $produk['foto'] ?>" alt="Foto Produk" class="img-thumbnail" style="height: 80px;">
@@ -64,11 +65,8 @@ $query = mysqli_query($koneksi, $sql);
                     <td><?= $produk['deskripsi'] ?></td>
                     <td>Rp <?= number_format($produk['harga'], 0, ',', '.') ?></td>
                     <td><?= $produk['ukuran'] ?></td>
-                    <td>
-                        <span class="badge bg-<?= $produk['ketersediaan'] == 'tersedia' ? 'success' : 'danger' ?>">
-                            <?= ucfirst($produk['ketersediaan']) ?>
-                        </span>
-                    </td>
+                    <td><?= $produk['stok'] ?></td>
+
                     <td>
                         <a href="edit.php?id_produk=<?= $produk['id_produk'] ?>" class="btn btn-sm btn-warning mb-1">Edit</a>
                         <a href="hapus.php?id_produk=<?= $produk['id_produk'] ?>" class="btn btn-sm btn-danger mb-1" onclick="return confirm('Apakah Anda yakin ingin menghapus produk ini?')">Hapus</a>

@@ -12,7 +12,7 @@ $nama          = $_POST['nama'];
 $deskripsi     = $_POST['deskripsi'];
 $harga         = $_POST['harga'];
 $ukuran        = $_POST['ukuran'];
-$ketersediaan  = $_POST['ketersediaan'];
+$stok          = $_POST['stok'];
 
 $ukuran_valid = ['M', 'L', 'XL'];
 if (!in_array($ukuran, $ukuran_valid)) {
@@ -39,8 +39,8 @@ if (!in_array($image_file_type, $allowed_types)) {
 
 // Coba upload file
 if (move_uploaded_file($_FILES["foto"]["tmp_name"], $target_file)) {
-    $query = "INSERT INTO produk (id_kategori, nama, foto, deskripsi, harga, ukuran, ketersediaan)
-              VALUES ('$id_kategori', '$nama', '$foto_name', '$deskripsi', '$harga', '$ukuran', '$ketersediaan')";
+    $query = "INSERT INTO produk (id_kategori, nama, foto, deskripsi, harga, ukuran, stok)
+              VALUES ('$id_kategori', '$nama', '$foto_name', '$deskripsi', '$harga', '$ukuran', '$stok')";
 
     if (mysqli_query($koneksi, $query)) {
         header('Location: dashboard.php');

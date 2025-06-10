@@ -39,6 +39,7 @@ $ukuran_options = ['M', 'L', 'XL', 'XXL'];
             border-radius: 15px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
             display: flex;
+            justify-content: center;
             gap: 30px;
             flex-wrap: wrap;
         }
@@ -49,6 +50,7 @@ $ukuran_options = ['M', 'L', 'XL', 'XXL'];
         }
 
         .detail-image img {
+            margin-top: 3rem;
             width: 100%;
             max-width: 350px;
             height: auto;
@@ -62,7 +64,7 @@ $ukuran_options = ['M', 'L', 'XL', 'XXL'];
         }
 
         .detail-info h1 {
-            margin-top: 0;
+            margin-top: 4rem;
             font-size: 2rem;
         }
 
@@ -125,39 +127,38 @@ $ukuran_options = ['M', 'L', 'XL', 'XXL'];
     <?php
         include ('./header.php');
     ?>
-    <div class="detail-container">
-        <div class="detail-image">
-            <img src="../uploads/<?= $produk['foto'] ?>" alt="<?= $produk['nama'] ?>">
-        </div>
-        <div class="detail-info">
-            <h1><?= $produk['nama'] ?></h1>
-            <p><?= $produk['deskripsi'] ?></p>
-            <p class="price">Harga: Rp <?= number_format($produk['harga'], 0, ',', '.') ?></p>
-            <p>Ukuran: 
-                <select id="ukuranSelect">
-                    <?php foreach ($ukuran_options as $ukuran): ?>
-                        <option value="<?= $ukuran ?>" <?= ($produk['ukuran'] == $ukuran) ? 'selected' : '' ?>>
-                            <?= $ukuran ?>
-                        </option>
-                    <?php endforeach; ?>
-                </select>
-            </p>
-            <p>Ketersediaan: <?= $produk['ketersediaan'] == 'ya' ? 'Tersedia' : 'Tidak Tersedia' ?></p>
+    <div class="pt-20"></div>
+        <div class="detail-container mx-auto ">
+            <div class="detail-image">
+                <img src="../uploads/<?= $produk['foto'] ?>" alt="<?= $produk['nama'] ?>">
+            </div>
+            <div class="detail-info">
+                <h1><?= $produk['nama'] ?></h1>
+                <p style="color: #666;"><?= $produk['deskripsi'] ?></p>
+                <p class="price">Harga: Rp <?= number_format($produk['harga'], 0, ',', '.') ?></p>
+                <p>Ukuran: 
+                    <select id="ukuranSelect">
+                        <?php foreach ($ukuran_options as $ukuran): ?>
+                            <option value="<?= $ukuran ?>" <?= ($produk['ukuran'] == $ukuran) ? 'selected' : '' ?>>
+                                <?= $ukuran ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </p>
+                <p>Stok: <?= $produk['stok'] ?></p>
 
-            <?php if ($produk['ketersediaan'] == 'ya') : ?>
-                <a href="tambah_keranjang.php?id_produk=<?= $produk['id_produk'] ?>&ukuran=M" 
-                   class="btn-keranjang" id="keranjangBtn">Masukkan ke Keranjang</a>
-                <a href="checkout.php?id_produk=<?= $produk['id_produk'] ?>&beli=sekarang&ukuran=M" 
-                   class="btn-beli" id="beliBtn">Beli Sekarang</a>
-            <?php else: ?>
-                <a href="#" class="btn-keranjang btn-disabled" onclick="return false;">Masukkan ke Keranjang</a>
-                <a href="#" class="btn-beli btn-disabled" onclick="return false;">Beli Sekarang</a>
-            <?php endif; ?>
+                    <a href="tambah_keranjang.php?id_produk=<?= $produk['id_produk'] ?>&ukuran=M" 
+                    class="btn-keranjang" id="keranjangBtn">Masukkan ke Keranjang</a>
+                    <a href="checkout.php?id_produk=<?= $produk['id_produk'] ?>&beli=sekarang&ukuran=M" 
+                    class="btn-beli" id="beliBtn">Beli Sekarang</a>
 
-            <br>
-            <a href="javascript:history.back()" class="back-btn">Kembali</a>
+                    <!-- <a href="#" class="btn-keranjang btn-disabled" onclick="return false;">Masukkan ke Keranjang</a>
+                    <a href="#" class="btn-beli btn-disabled" onclick="return false;">Beli Sekarang</a> -->
+
+                <br>
+                <a href="javascript:history.back()" class="back-btn">Kembali</a>
+            </div>
         </div>
-    </div>
 
     <script>
         const ukuranSelect = document.getElementById('ukuranSelect');
@@ -166,7 +167,7 @@ $ukuran_options = ['M', 'L', 'XL', 'XXL'];
 
         ukuranSelect.addEventListener('change', function() {
             const selectedUkuran = this.value;
-            keranjangBtn.href = `tambah_keranjang.php?id_produk=<?= $produk['id_produk'] ?>&ukuran=${selectedUkuran}`;
+            keranjangBtn.href = `keranjang.php?id_produk=<?= $produk['id_produk'] ?>&ukuran=${selectedUkuran}`;
             beliBtn.href = `checkout.php?id_produk=<?= $produk['id_produk'] ?>&beli=sekarang&ukuran=${selectedUkuran}`;
         });
     </script>

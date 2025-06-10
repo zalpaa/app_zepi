@@ -8,20 +8,8 @@
 </head>
 <body class="bg-gray-50 font-sans">
   <!-- Header -->
-  <header class="bg-white fixed w-full shadow-md">
-    <div class="container mx-auto px-4 py-4 flex justify-between items-center">
-      <h1 class="text-2xl font-bold text-gray-800">FLAZ</h1>
-      <nav>
-        <ul class="flex space-x-6">
-          <li><a href="./home.php" class="text-gray-600 hover:text-gray-900">Home</a></li>
-          <li><a href="./produk.php" class="text-gray-600 hover:text-gray-900">Produk</a></li>
-          <li><a href="#" class="text-gray-600 hover:text-gray-900">Tentang Kami</a></li>
-          <li><a href="./kontak.php" class="text-gray-600 hover:text-gray-900">Kontak</a></li>
-        </ul>
-      </nav>
-    </div>
-  </header>
-
+<?php include "header.php"?>
+ 
    <div class="pt-20"></div>
 
   <!-- Tentang Kami Section -->
@@ -37,10 +25,6 @@
   </section>
 
   <!-- Footer -->
-  <footer class="bg-gray-800 text-white py-6 mt-10">
-    <div class="container mx-auto text-center">
-      <p>&copy; 2025 FLAZ. All rights reserved.</p>
-    </div>
-  </footer>
+<?php include "footer.php" ?>
 </body>
 </html>

@@ -1,25 +1,23 @@
 <?php
-include "koneksi.php";
 session_start();
+include "koneksi.php";
 
-// Cek login user
-if (!isset($_SESSION['id_users'])) {
-    echo "<script>alert('Silakan login dulu'); window.location.href='login.php';</script>";
-    exit;
-}
-
+// Pastikan user sudah login
+$id_users = $_SESSION['id_users'] ?? 1; // Ganti 1 dengan ID User login jika ada sistem login
 $id_produk = $_GET['id_produk'];
-$id_users = $_SESSION['id_users'];
-$tanggal = date("Y-m-d");
+$ukuran = $_GET['ukuran'] ?? 'M';
+$jumlah = 1; // Default tambah 1 item
 
-// Cek apakah produk sudah ada di keranjang
-$cek = mysqli_query($koneksi, "SELECT * FROM keranjang WHERE id_produk='$id_produk' AND id_users='$id_users'");
-if (mysqli_num_rows($cek) > 0) {
-    // Jika sudah ada, tambahkan jumlah
-    mysqli_query($koneksi, "UPDATE keranjang SET jumlah=jumlah+1 WHERE id_produk='$id_produk' AND id_users='$id_users'");
+// Cek apakah produk dengan ukuran yang sama sudah ada di keranjang
+$cek = mysqli_query($koneksi, "SELECT * FROM keranjang WHERE id_users='$id_users' AND id_produk='$id_produk' AND ukuran='$ukuran'");
+if(mysqli_num_rows($cek) > 0){
+    // Jika sudah ada, update jumlah_produk
+    mysqli_query($koneksi, "UPDATE keranjang SET jumlah_produk = jumlah_produk + $jumlah WHERE id_users='$id_users' AND id_produk='$id_produk' AND ukuran='$ukuran'");
 } else {
-    // Jika belum ada, tambahkan baru
-    mysqli_query($koneksi, "INSERT INTO keranjang (id_users, id_produk, jumlah, tanggal) VALUES ('$id_users', '$id_produk', 1, '$tanggal')");
+    // Jika belum ada, insert baru
+    mysqli_query($koneksi, "INSERT INTO keranjang (id_users, id_produk, ukuran, jumlah_produk) VALUES ('$id_users', '$id_produk', '$ukuran', '$jumlah')");
 }
 
-echo "<script>alert('Produk ditambahkan ke keranjang'); window.location.href='keranjang.php';</script>";
+header("Location: keranjang.php");
+exit;
+?>

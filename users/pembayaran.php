@@ -124,9 +124,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     </style>
 </head>
 <body>
-     <?php
-        include ('./header.php');
-    ?>
+    
+    <!-- Header -->
+<?php include "header.php"?>
+
     <div class="pt-28 flex justify-center">
     <div class="container-card">
         <h1>Pembayaran</h1>

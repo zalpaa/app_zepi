@@ -14,7 +14,7 @@ $nama          = mysqli_real_escape_string($koneksi, $_POST['nama']);
 $deskripsi     = mysqli_real_escape_string($koneksi, $_POST['deskripsi']);
 $harga         = $_POST['harga'];
 $ukuran        = $_POST['ukuran'];
-$ketersediaan  = $_POST['ketersediaan'];
+$stok           =$_POST['stok'];
 
 // Ambil data produk lama (untuk ambil nama file foto lama jika tidak diupdate)
 $query_lama = mysqli_query($koneksi, "SELECT foto FROM produk WHERE id_produk = '$id_produk'");
@@ -59,7 +59,7 @@ $sql_update = "UPDATE produk SET
     deskripsi = '$deskripsi',
     harga = '$harga',
     ukuran = '$ukuran',
-    ketersediaan = '$ketersediaan'
+    stok = '$stok'
     WHERE id_produk = '$id_produk'";
 
 if (mysqli_query($koneksi, $sql_update)) {
