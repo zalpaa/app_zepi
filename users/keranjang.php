@@ -24,9 +24,8 @@ $result = mysqli_query($koneksi, $sql);
             background-color: #f9fafb;
         }
 
-        .container {
+        .container-card {
             max-width: 900px;
-            margin: 50px auto;
             padding: 20px;
             background: #ffffff;
             border-radius: 10px;
@@ -96,7 +95,7 @@ $result = mysqli_query($koneksi, $sql);
             text-decoration: underline;
         }
 
-        .jumlah-container {
+        .jumlah-container-card {
             display: flex;
             justify-content: center;
             align-items: center;
@@ -108,7 +107,8 @@ $result = mysqli_query($koneksi, $sql);
 
 <?php include('header.php'); ?>
 
-<div class="container">
+<div class="mx-auto pt-20 flex justify-center">
+    <div class="container-card">
     <h2>Keranjang Belanja</h2>
     <table>
         <tr>
@@ -132,7 +132,7 @@ $result = mysqli_query($koneksi, $sql);
             <td><img src="../uploads/<?= $row['foto'] ?>" alt="<?= $row['nama'] ?>"></td>
             <td><?= $row['ukuran'] ?></td>
             <td>
-                <div class="jumlah-container">
+                <div class="jumlah-container-card">
                     <form method="POST" action="update_jumlah.php" style="display:inline;">
                         <input type="hidden" name="id_keranjang" value="<?= $row['id_keranjang'] ?>">
                         <input type="hidden" name="aksi" value="kurang">
@@ -179,6 +179,7 @@ $result = mysqli_query($koneksi, $sql);
 
         <button type="submit">Checkout Semua Produk</button>
     </form>
+</div>
 </div>
 
 </body>
