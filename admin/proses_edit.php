@@ -63,7 +63,7 @@ $sql_update = "UPDATE produk SET
     WHERE id_produk = '$id_produk'";
 
 if (mysqli_query($koneksi, $sql_update)) {
-    echo "<script>alert('Produk berhasil diperbarui!'); window.location.href = 'dashboard.php';</script>";
+    echo "<script>alert('Produk berhasil diperbarui!'); window.location.href = 'admin-dashboard.php?page=produk';</script>";
 } else {
     echo "Gagal mengupdate produk: " . mysqli_error($koneksi);
 }

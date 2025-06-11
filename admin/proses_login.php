@@ -10,7 +10,7 @@ $query = mysqli_query($koneksi,$sql);
 if (mysqli_num_rows($query) == 1) {
     $users = mysqli_fetch_assoc($query);
     $_SESSION['id'] = $users['id_users'];
-    header("location:dashboard.php?login=sukses");
+    header("location:admin-dashboard.php?login=sukses");
     exit;
 } else {
     header("location:login.php?login=gagal");

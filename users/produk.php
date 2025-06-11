@@ -1,35 +1,35 @@
 <?php
-//session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
 include "koneksi.php";
 
-
-//if(!isset($_SESSION['id'])) {
-//    header("location:login.php?pesan=logindulu");
-//    exit;
-//}
-
-
+// Cek apakah user sudah login
+if (!isset($_SESSION['id'])) {
+    header("location:login.php?pesan=logindulu");
+    exit;
+}
 
 $sql = "SELECT * FROM produk"; 
-$query = mysqli_query($koneksi,$sql); 
- 
+$query = mysqli_query($koneksi, $sql); 
 ?> 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Produk</title>
     <link rel="stylesheet" href="./style.css">
-    <title>Document</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
 <body>
 
 <!-- Header -->
-<?php include "header.php"?>
+<?php include "header.php"; ?>
 
-  <div class="pt-20"></div>
+<div class="pt-20"></div>
 
 <div class="container-card">
     <div class="cont" style="justify-content: center;">
@@ -43,7 +43,6 @@ $query = mysqli_query($koneksi,$sql);
                     <p class="product-card__description"><?= $produk['deskripsi'] ?></p>
                     <div class="product-card__price-row">
                         <span class="product-card__price">Rp <?= number_format($produk['harga'], 0, ',', '.') ?></span>
-                        
                     </div>
                     <p>Stok: <?= $produk['stok'] ?></p>
                     <div style="margin-top: 10px;">
@@ -58,6 +57,7 @@ $query = mysqli_query($koneksi,$sql);
 </div>
 
 <!-- Footer -->
-  <?php include "footer.php"; ?>
+<?php include "footer.php"; ?>
+
 </body>
 </html>

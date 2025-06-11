@@ -14,6 +14,6 @@ if ($query) {
     exit;
 } else {
     header("location:login.php?register=gagal");
-    exit;
+    exit;
 }
 ?>

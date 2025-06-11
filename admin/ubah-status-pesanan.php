@@ -1,4 +1,5 @@
 <?php
+session_start(); // Tambahkan ini
 include "koneksi.php";
 
 $id = $_GET['id'] ?? null;
@@ -9,9 +10,15 @@ if (!$id) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $status = $_POST['status'];
     mysqli_query($koneksi, "UPDATE pemesanan SET status='$status' WHERE id_pemesanan=$id");
-    header("Location: admin-pesanan.php");
+
+    // Flash message
+    $_SESSION['flash'] = "Status pesanan berhasil diperbarui.";
+
+    // Redirect ke halaman pesanan
+    header("Location: admin-dashboard.php?page=pesanan");
     exit;
 }
+
 
 $query = mysqli_query($koneksi, "SELECT * FROM pemesanan WHERE id_pemesanan=$id");
 $data = mysqli_fetch_assoc($query);

@@ -43,7 +43,7 @@ if (move_uploaded_file($_FILES["foto"]["tmp_name"], $target_file)) {
               VALUES ('$id_kategori', '$nama', '$foto_name', '$deskripsi', '$harga', '$ukuran', '$stok')";
 
     if (mysqli_query($koneksi, $query)) {
-        header('Location: dashboard.php');
+        header('Location: admin-dashboard.php?page=produk');
         exit;
     } else {
         echo "Gagal menyimpan data: " . mysqli_error($koneksi);

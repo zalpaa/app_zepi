@@ -22,6 +22,6 @@ mysqli_query($koneksi, "DELETE FROM keranjang WHERE id_produk = '$id_produk'");
 mysqli_query($koneksi, "DELETE FROM produk WHERE id_produk = '$id_produk'");
 
 // Redirect
-header("location:dashboard.php");
+header("location:admin-dashboard.php?page=produk");
 exit;
 ?>

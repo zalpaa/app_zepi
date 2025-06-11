@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $update = "UPDATE pembayaran SET status = '$status' WHERE id_pembayaran = $id_pembayaran";
     mysqli_query($koneksi, $update);
 
-    echo "<script>alert('Status berhasil diperbarui');window.location.href='admin-verifikasi.php';</script>";
+ echo "<script>alert('Status berhasil diperbarui');window.location.href='admin-dashboard.php?page=verifikasi';</script>";
 }
 ?>
 
@@ -48,7 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </select>
         </div>
         <button type="submit" class="btn btn-success">Simpan</button>
-        <a href="admin-verifikasi.php" class="btn btn-secondary">Kembali</a>
+        <a href="admin-dashboard.php?page=verifikasi" class="btn btn-secondary">Kembali</a>
     </form>
 </div>
 </body>
