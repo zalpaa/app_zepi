@@ -6,7 +6,7 @@ if (session_status() === PHP_SESSION_NONE) {
 include "koneksi.php";
 
 // Cek apakah user sudah login
-if (!isset($_SESSION['id'])) {
+if (!isset($_SESSION['id_users'])) {
     header("location:login.php?pesan=logindulu");
     exit;
 }
