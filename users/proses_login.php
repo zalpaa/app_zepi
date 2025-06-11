@@ -10,10 +10,10 @@ $query = mysqli_query($koneksi,$sql);
 if (mysqli_num_rows($query) == 1) {
     $users = mysqli_fetch_assoc($query);
     $_SESSION['id_users'] = $users['id_users'];
-    header("location:produk.php?login=sukses");
+    header("location:home.php?login=sukses");
     exit;
 } else {
     header("location:login.php?login=gagal");
-    exit;
+exit;
 }
 ?>

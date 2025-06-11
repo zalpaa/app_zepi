@@ -18,14 +18,15 @@ $query = mysqli_query($koneksi, $sql);
 <!-- Header -->
 <?php include "header.php"?>
 
-  <!-- Hero Section -->
-  <section class="bg-gradient-to-r from-red-500 via-red-400 to-red-500 text-white h-screen pt-20 flex items-center">
-    <div class="container mx-auto text-center">
-      <h2 class="text-4xl font-bold mb-4">Selamat Datang di Store FLAZ</h2>
-      <p class="text-lg mb-8">Temukan fashion terkini untuk gaya kamu!</p>
-      <a href="./produk.php" class="bg-white text-red-500 px-6 py-3 rounded-full font-semibold hover:bg-gray-100">Belanja Sekarang</a>
-    </div>
-  </section>
+  <section class="text-white h-screen pt-20 flex items-center" 
+    style="background-image: url('../uploads/res087c28c3dbbe82526614d337cc14bc44fr (1).jpg'); background-size: cover; background-position: center; background-repeat: no-repeat;">
+  <div class="container mx-auto text-center">
+    <h2 class="text-4xl font-bold mb-4">Selamat Datang di Store FLAZ</h2>
+    <p class="text-lg mb-8">Temukan fashion terkini untuk gaya kamu!</p>
+    <a href="./produk.php" class="bg-white text-red-500 px-6 py-3 rounded-full font-semibold hover:bg-gray-100">Belanja Sekarang</a>
+  </div>
+</section>
+
 
   <!-- Produk Terbaru -->
      <h3 class="text-2xl font-bold text-gray-800 mb-8 text-center" style="margin-top:3rem;">Produk Terbaru</h3>
