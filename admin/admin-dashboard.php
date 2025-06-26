@@ -3,7 +3,7 @@ session_start();
 include "koneksi.php";
 
 // Cek apakah admin sudah login
-if (!isset($_SESSION['id'])) {
+if (!isset($_SESSION['id_admin'])) {
     header("Location: login.php?pesan=logindulu");
     exit;
 }

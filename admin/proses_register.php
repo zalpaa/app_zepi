@@ -1,11 +1,11 @@
 <?php
 include "koneksi.php";
 
-$nama = $_POST['nama'];
+
 $username = $_POST['username'];
 $password = $_POST['password'];
 
-$sql = "INSERT INTO users (nama, username, password) VALUES ('$nama', '$username', md5('$password') )";
+$sql = "INSERT INTO admin (username, password) VALUES ('$username', md5('$password') )";
 
 $query = mysqli_query($koneksi, $sql);
 
