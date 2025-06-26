@@ -8,8 +8,11 @@ if (!$id_pembayaran) {
     exit;
 }
 
-// Ambil data pembayaran
-$query = "SELECT * FROM pembayaran WHERE id_pembayaran = $id_pembayaran";
+// Ambil data pembayaran dan pemesanan
+$query = "SELECT pembayaran.*, pemesanan.id_pemesanan 
+          FROM pembayaran 
+          JOIN pemesanan ON pembayaran.id_pemesanan = pemesanan.id_pemesanan 
+          WHERE pembayaran.id_pembayaran = $id_pembayaran";
 $result = mysqli_query($koneksi, $query);
 $data = mysqli_fetch_assoc($result);
 
@@ -19,13 +22,29 @@ if (!$data) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $status = $_POST['status'];
+    $status_pembayaran = $_POST['status'];
+    $id_pemesanan = $data['id_pemesanan'];
+
+    // Tentukan status pesanan sesuai status pembayaran
+    if ($status_pembayaran === 'dibayar') {
+        $status_pesanan = 'dikemas';
+    } elseif ($status_pembayaran === 'gagal') {
+        $status_pesanan = 'dibatalkan';
+    } else {
+        $status_pesanan = 'pending'; // fallback default
+    }
 
     // Update status pembayaran
-    $update = "UPDATE pembayaran SET status = '$status' WHERE id_pembayaran = $id_pembayaran";
-    mysqli_query($koneksi, $update);
+    $update_pembayaran = mysqli_query($koneksi, "UPDATE pembayaran SET status = '$status_pembayaran' WHERE id_pembayaran = $id_pembayaran");
 
- echo "<script>alert('Status berhasil diperbarui');window.location.href='admin-dashboard.php?page=verifikasi';</script>";
+    // Update status pemesanan juga
+    $update_pesanan = mysqli_query($koneksi, "UPDATE pemesanan SET status = '$status_pesanan' WHERE id_pemesanan = $id_pemesanan");
+
+    if ($update_pembayaran && $update_pesanan) {
+        echo "<script>alert('Status berhasil diperbarui');window.location.href='admin-dashboard.php?page=verifikasi';</script>";
+    } else {
+        echo "<script>alert('Gagal memperbarui status.');history.back();</script>";
+    }
 }
 ?>
 

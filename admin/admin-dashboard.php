@@ -62,8 +62,6 @@ $page = $_GET['page'] ?? 'pesanan';
     <a href="?page=produk" class="<?= $page == 'produk' ? 'active' : '' ?>"><i class="fa fa-box"></i> Daftar Produk</a>
     <a href="?page=verifikasi" class="<?= $page == 'verifikasi' ? 'active' : '' ?>"><i class="fa fa-check-circle"></i> Verifikasi Pembayaran</a>
     <a href="?page=pesanan" class="<?= $page == 'pesanan' ? 'active' : '' ?>"><i class="fa fa-shopping-cart"></i> Kelola Pesanan</a>
-
-    <!-- Tombol Logout -->
     <a href="logout.php" class="logout-link"><i class="fa fa-sign-out-alt"></i> Logout</a>
 </div>
 
@@ -75,7 +73,55 @@ $page = $_GET['page'] ?? 'pesanan';
     } elseif ($page == 'verifikasi') {
         include "verifikasi.php";
     } else {
-        include "pesanan.php";
+        $query = "SELECT ps.*, u.nama AS nama_user FROM pemesanan ps
+                  JOIN users u ON ps.id_users = u.id_users
+                  ORDER BY ps.id_pemesanan DESC";
+        $result = mysqli_query($koneksi, $query);
+
+        echo '<h3 class="mb-4">Daftar Pesanan</h3>
+              <table class="table table-bordered table-striped">
+                <thead class="table-dark">
+                  <tr>
+                    <th>ID</th>
+                    <th>Nama</th>
+                    <th>No. HP</th>
+                    <th>Alamat</th>
+                    <th>Catatan</th>
+                    <th>Kurir</th>
+                    <th>Tanggal</th>
+                    <th>Total</th>
+                    <th>Status</th>
+                    <th>Aksi</th>
+                  </tr>
+                </thead>
+                <tbody>';
+
+        while ($row = mysqli_fetch_assoc($result)) {
+            $status = $row['status'];
+            $badge = match ($status) {
+                'dibayar' => 'success',
+                'menunggu konfirmasi', 'pending' => 'secondary',
+                'dikirim' => 'primary',
+                'dikemas' => 'warning',
+                'gagal' => 'danger',
+                default => 'dark',
+            };
+
+            echo '<tr>
+                    <td>#' . htmlspecialchars($row['id_pemesanan']) . '</td>
+                    <td>' . htmlspecialchars($row['nama_lengkap']) . '</td>
+                    <td>' . htmlspecialchars($row['no_hp']) . '</td>
+                    <td>' . htmlspecialchars($row['alamat']) . '</td>
+                    <td>' . htmlspecialchars($row['catatan']) . '</td>
+                    <td>' . (isset($row['kurir']) ? htmlspecialchars($row['kurir']) : '-') . '</td>
+                    <td>' . htmlspecialchars($row['tanggal_pemesanan']) . '</td>
+                    <td>Rp ' . number_format($row['total_bayar'], 0, ',', '.') . '</td>
+                    <td><span class="badge bg-' . $badge . '">' . ucfirst(htmlspecialchars($status)) . '</span></td>
+                    <td><a href="ubah-status-pesanan.php?id=' . $row['id_pemesanan'] . '" class="btn btn-sm btn-primary">Ubah Status</a></td>
+                  </tr>';
+        }
+
+        echo '</tbody></table>';
     }
     ?>
 </div>
