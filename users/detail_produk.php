@@ -1,176 +1,116 @@
 <?php
+session_start();
 include "koneksi.php";
 
-// Ambil ID produk dari URL
 $id_produk = $_GET['id_produk'];
-
-// Query produk berdasarkan ID
 $sql = "SELECT * FROM produk WHERE id_produk = $id_produk";
 $query = mysqli_query($koneksi, $sql);
 $produk = mysqli_fetch_assoc($query);
 
-// Jika produk tidak ditemukan
 if (!$produk) {
     echo "Produk tidak ditemukan.";
     exit;
 }
 
-// Ambil ukuran dari enum secara manual (karena ENUM di DB)
 $ukuran_options = ['M', 'L', 'XL', 'XXL'];
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <title>Detail Produk</title>
     <link rel="stylesheet" href="./style.css">
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f8f9fa;
-        }
-
-        .detail-container {
-            max-width: 900px;
-            padding: 30px;
-            background-color: #fff;
-            border: 1px solid #ddd;
-            border-radius: 15px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            display: flex;
-            justify-content: center;
-            gap: 30px;
-            flex-wrap: wrap;
-        }
-
-        .detail-image {
-            flex: 1 1 300px;
-            text-align: center;
-        }
-
-        .detail-image img {
-            margin-top: 3rem;
-            width: 100%;
-            max-width: 350px;
-            height: auto;
-            object-fit: cover;
-            border-radius: 10px;
-            border: 1px solid #ccc;
-        }
-
-        .detail-info {
-            flex: 2 1 400px;
-        }
-
-        .detail-info h1 {
-            margin-top: 4rem;
-            font-size: 2rem;
-        }
-
-        .price {
-            font-size: 1.7rem;
-            color: #e63946;
-            margin: 15px 0;
-            font-weight: bold;
-        }
-
-        select {
-            padding: 8px 12px;
-            margin: 10px 0;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-        }
-
-        .btn-keranjang, .btn-beli {
-            display: inline-block;
-            padding: 12px 20px;
-            margin-top: 15px;
-            background-color: #007bff;
-            color: white;
-            text-decoration: none;
-            border-radius: 8px;
-            transition: background-color 0.3s ease;
-        }
-
-        .btn-keranjang:hover {
-            background-color: #0056b3;
-        }
-
-        .btn-beli {
-            background-color: #28a745;
-        }
-
-        .btn-beli:hover {
-            background-color: #1e7e34;
-        }
-
-        .btn-disabled {
-            background-color: #ccc !important;
-            cursor: not-allowed;
-        }
-
-        .back-btn {
-            display: inline-block;
-            margin-top: 20px;
-            text-decoration: none;
-            color: #007bff;
-            font-weight: bold;
-        }
-
-        .back-btn:hover {
-            text-decoration: underline;
-        }
-    </style>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
-<body>
-    <?php
-        include ('./header.php');
-    ?>
-    <div class="pt-20"></div>
-        <div class="detail-container mx-auto ">
-            <div class="detail-image">
-                <img src="../uploads/<?= $produk['foto'] ?>" alt="<?= $produk['nama'] ?>">
+<body class="bg-gray-100 font-sans">
+
+<?php include "header.php"; ?>
+
+<div class="pt-24"></div>
+<div class="max-w-5xl mx-auto p-6 bg-white rounded-lg shadow-md flex flex-col md:flex-row gap-8">
+    <!-- Gambar Produk -->
+    <div class="w-full md:w-1/2">
+        <img src="../uploads/<?= $produk['foto'] ?>" alt="<?= $produk['nama'] ?>" class="rounded-lg shadow">
+    </div>
+
+    <!-- Info Produk -->
+    <div class="w-full md:w-1/2">
+        <h1 class="text-3xl font-bold text-gray-800 mb-2"><?= $produk['nama'] ?></h1>
+        <p class="text-gray-600 mb-4"><?= $produk['deskripsi'] ?></p>
+        <p class="text-2xl font-bold text-green-600 mb-4">Rp <?= number_format($produk['harga'], 0, ',', '.') ?></p>
+
+        <form class="space-y-4">
+            <div>
+                <label for="ukuranSelect" class="block text-gray-700 font-semibold">Pilih Ukuran</label>
+                <select id="ukuranSelect" class="w-full border border-gray-300 rounded px-3 py-2">
+                    <?php foreach ($ukuran_options as $ukuran): ?>
+                        <option value="<?= $ukuran ?>"><?= $ukuran ?></option>
+                    <?php endforeach; ?>
+                </select>
             </div>
-            <div class="detail-info">
-                <h1><?= $produk['nama'] ?></h1>
-                <p style="color: #666;"><?= $produk['deskripsi'] ?></p>
-                <p class="price">Harga: Rp <?= number_format($produk['harga'], 0, ',', '.') ?></p>
-                <p>Ukuran: 
-                    <select id="ukuranSelect">
-                        <?php foreach ($ukuran_options as $ukuran): ?>
-                            <option value="<?= $ukuran ?>" <?= ($produk['ukuran'] == $ukuran) ? 'selected' : '' ?>>
-                                <?= $ukuran ?>
-                            </option>
-                        <?php endforeach; ?>
-                    </select>
-                </p>
-                <p>Stok: <?= $produk['stok'] ?></p>
 
-                    <a href="tambah_keranjang.php?id_produk=<?= $produk['id_produk'] ?>&ukuran=M" 
-                    class="btn-keranjang" id="keranjangBtn">Masukkan ke Keranjang</a>
-                    <a href="checkout.php?id_produk=<?= $produk['id_produk'] ?>&beli=sekarang&ukuran=M" 
-                    class="btn-beli" id="beliBtn">Beli Sekarang</a>
-
-                    <!-- <a href="#" class="btn-keranjang btn-disabled" onclick="return false;">Masukkan ke Keranjang</a>
-                    <a href="#" class="btn-beli btn-disabled" onclick="return false;">Beli Sekarang</a> -->
-
-                <br>
-                <a href="javascript:history.back()" class="back-btn">Kembali</a>
+            <div>
+                <label for="jumlahInput" class="block text-gray-700 font-semibold">Jumlah</label>
+                <input type="number" id="jumlahInput" min="1" value="1" class="w-full border border-gray-300 rounded px-3 py-2">
             </div>
-        </div>
 
-    <script>
-        const ukuranSelect = document.getElementById('ukuranSelect');
-        const keranjangBtn = document.getElementById('keranjangBtn');
-        const beliBtn = document.getElementById('beliBtn');
+            <p class="text-sm text-gray-500">Stok tersedia: <?= $produk['stok'] ?></p>
 
-        ukuranSelect.addEventListener('change', function() {
-    const selectedUkuran = this.value;
-    keranjangBtn.href = `tambah_keranjang.php?id_produk=<?= $produk['id_produk'] ?>&ukuran=${selectedUkuran}`;
-    beliBtn.href = `checkout.php?id_produk=<?= $produk['id_produk'] ?>&beli=sekarang&ukuran=${selectedUkuran}`;
+            <div class="flex gap-4 mt-6">
+                <button type="button" id="keranjangBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded shadow">
+                    Masukkan ke Keranjang
+                </button>
+                <a href="#" id="beliBtn" class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded shadow text-center">
+                    Beli Sekarang
+                </a>
+            </div>
+            <div id="notif" class="text-green-600 text-sm mt-2"></div>
+        </form>
+
+        <a href="javascript:history.back()" class="text-blue-500 text-sm mt-4 inline-block hover:underline">← Kembali</a>
+    </div>
+</div>
+
+<script>
+document.getElementById('keranjangBtn').addEventListener('click', function () {
+    const id_produk = <?= $produk['id_produk'] ?>;
+    const ukuran = document.getElementById('ukuranSelect').value;
+    const jumlah = document.getElementById('jumlahInput').value;
+
+    const formData = new FormData();
+    formData.append('id_produk', id_produk);
+    formData.append('ukuran', ukuran);
+    formData.append('jumlah', jumlah);
+
+    fetch('tambah_keranjang_ajax.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+        document.getElementById('notif').innerText = data.pesan;
+
+        fetch('get_jumlah_keranjang.php')
+        .then(res => res.json())
+        .then(data => {
+            const badge = document.getElementById('keranjang-badge');
+            if (badge) {
+                badge.innerText = data.total;
+                badge.style.display = (data.total > 0) ? 'inline' : 'none';
+            }
+        });
+    });
 });
 
-    </script>
+document.getElementById('beliBtn').addEventListener('click', function (e) {
+    e.preventDefault();
+    const ukuran = document.getElementById('ukuranSelect').value;
+    const jumlah = document.getElementById('jumlahInput').value;
+    const id_produk = <?= $produk['id_produk'] ?>;
+    window.location.href = `checkout.php?id_produk=${id_produk}&ukuran=${ukuran}&jumlah=${jumlah}`;
+});
+</script>
+
 </body>
 </html>

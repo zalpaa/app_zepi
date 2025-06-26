@@ -10,25 +10,17 @@ if (!isset($_SESSION['id_users'])) {
 
 $id_users = $_SESSION['id_users'];
 $id_produk = $_GET['id_produk'];
-$ukuran = isset($_GET['ukuran']) ? $_GET['ukuran'] : ''; // Ambil ukuran dari URL jika ada
+$ukuran = $_GET['ukuran'] ?? '';
+$jumlah_produk = $_GET['jumlah'] ?? 1;
 
-// Cek apakah ada di keranjang
-$keranjang = mysqli_query($koneksi, "SELECT * FROM keranjang WHERE id_users='$id_users' AND id_produk='$id_produk' LIMIT 1");
-$data_keranjang = mysqli_fetch_assoc($keranjang);
-
-if (!$data_keranjang) {
-    // Kalau tidak ada, tambahkan dulu
-    $tanggal = date("Y-m-d");
-    mysqli_query($koneksi, "INSERT INTO keranjang (id_users, id_produk, jumlah_produk, ukuran) VALUES ('$id_users', '$id_produk', 1, '$ukuran')");
-    $id_keranjang = mysqli_insert_id($koneksi);
-} else {
-    $id_keranjang = $data_keranjang['id_keranjang'];
+// Cek produk
+$produk = mysqli_fetch_assoc(mysqli_query($koneksi, "SELECT * FROM produk WHERE id_produk='$id_produk'"));
+if (!$produk) {
+    echo "<script>alert('Produk tidak ditemukan.'); window.history.back();</script>";
+    exit;
 }
 
-// Ambil data produk
-$produk = mysqli_fetch_assoc(mysqli_query($koneksi, "SELECT * FROM produk WHERE id_produk='$id_produk'"));
-
-// Proses checkout form
+// Proses saat submit form
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $jumlah_produk = $_POST['jumlah_produk'];
     $ukuran = $_POST['ukuran'];
@@ -36,19 +28,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $nama_lengkap = $_POST['nama_lengkap'];
     $alamat = $_POST['alamat'];
     $no_hp = $_POST['no_hp'];
-    $tanggal_pemesanan = date("Y-m-d H:i:s");
     $id_jasa_kurir = $_POST['id_jasa_kurir'];
+
+    $tanggal_pemesanan = date("Y-m-d H:i:s");
     $diskon = 0;
-    $harga = $_POST['harga'];
+    $harga = $produk['harga'];
     $total_harga = $harga * $jumlah_produk;
     $total_bayar = $total_harga - $diskon;
 
     $sql = "INSERT INTO pemesanan (id_users, id_produk, id_keranjang, tanggal_pemesanan, jumlah_produk, total_harga, diskon, total_bayar, ukuran, catatan, status, id_jasa_kurir, nama_lengkap, alamat, no_hp) 
-            VALUES ('$id_users', '$id_produk', '$id_keranjang', '$tanggal_pemesanan', '$jumlah_produk', '$total_harga', '$diskon', '$total_bayar', '$ukuran', '$catatan', 'pending', '$id_jasa_kurir', '$nama_lengkap', '$alamat', '$no_hp')";
+            VALUES ('$id_users', '$id_produk', 0, '$tanggal_pemesanan', '$jumlah_produk', '$total_harga', '$diskon', '$total_bayar', '$ukuran', '$catatan', 'pending', '$id_jasa_kurir', '$nama_lengkap', '$alamat', '$no_hp')";
 
     if (mysqli_query($koneksi, $sql)) {
         $id_pemesanan = mysqli_insert_id($koneksi);
-        echo '<script>alert("Pesanan berhasil!"); window.location.href="pembayaran.php?id_pemesanan=' . $id_pemesanan . '";</script>';
+        echo "<script>alert('Pesanan berhasil!'); window.location.href='pembayaran.php?id_pemesanan=$id_pemesanan';</script>";
     } else {
         echo "Gagal: " . mysqli_error($koneksi);
     }
@@ -57,125 +50,82 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <title>Checkout Produk</title>
-    <link rel="stylesheet" href="./style.css">
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f4f4f4;
-        }
-
-        .checkout-container {
-            min-width: 600px;      
-            padding: 25px;      
-            background: #fff;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-
-        h1 {
-            text-align: center;
-            color: #333;
-        }
-
-        label {
-            font-weight: bold;
-            display: block;
-            margin: 15px 0 5px;
-        }
-
-        input[type="text"], input[type="number"], textarea, select {
-            width: 100%;
-            padding: 10px;
-            margin-top: 5px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-            box-sizing: border-box;
-        }
-
-        button {
-            background-color: #28a745;
-            color: white;
-            padding: 12px 20px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            margin-top: 20px;
-            width: 100%;
-            font-size: 16px;
-        }
-
-        button:hover {
-            background-color: #218838;
-        }
-
-        .product-info {
-            margin-bottom: 20px;
-            background: #f9f9f9;
-            padding: 15px;
-            border-radius: 5px;
-            border: 1px solid #ddd;
-        }
-    </style>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
-<body>
-    <?php
-        include ('./header.php');
-    ?>
-<div class="pt-20 flex justify-center">
-<div class="checkout-container">
+<body class="bg-gray-100 font-sans">
 
-    <h1>Checkout Produk</h1>
+<?php include "header.php"; ?>
 
-    <div class="product-info">
-        <p><strong>Nama Produk:</strong> <?= $produk['nama'] ?></p>
-        <p><strong>Harga:</strong> Rp <?= number_format($produk['harga'], 0, ',', '.') ?></p>
+<div class="pt-24 flex justify-center">
+    <div class="w-full max-w-2xl bg-white p-6 rounded-lg shadow-md">
+        <h1 class="text-2xl font-bold text-center text-gray-800 mb-6">Checkout Produk</h1>
+
+        <div class="mb-6 border p-4 rounded bg-gray-50">
+            <p><strong>Nama Produk:</strong> <?= $produk['nama'] ?></p>
+            <p><strong>Harga:</strong> Rp <?= number_format($produk['harga'], 0, ',', '.') ?></p>
+        </div>
+
+        <form method="POST" class="space-y-4">
+            <input type="hidden" name="harga" value="<?= $produk['harga'] ?>">
+
+            <div>
+                <label class="block font-semibold text-gray-700">Jumlah:</label>
+                <input type="number" name="jumlah_produk" min="1" value="<?= htmlspecialchars($jumlah_produk) ?>" required class="w-full px-3 py-2 border border-gray-300 rounded">
+            </div>
+
+            <div>
+                <label class="block font-semibold text-gray-700">Ukuran:</label>
+                <select name="ukuran" required class="w-full px-3 py-2 border border-gray-300 rounded">
+                    <option value="">-- Pilih Ukuran --</option>
+                    <?php
+                    $ukuran_options = ['M', 'L', 'XL', 'XXL'];
+                    foreach ($ukuran_options as $u) {
+                        $selected = ($ukuran == $u) ? 'selected' : '';
+                        echo "<option value='$u' $selected>$u</option>";
+                    }
+                    ?>
+                </select>
+            </div>
+
+            <div>
+                <label class="block font-semibold text-gray-700">Catatan:</label>
+                <textarea name="catatan" rows="2" class="w-full px-3 py-2 border border-gray-300 rounded"></textarea>
+            </div>
+
+            <div>
+                <label class="block font-semibold text-gray-700">Nama Lengkap:</label>
+                <input type="text" name="nama_lengkap" required class="w-full px-3 py-2 border border-gray-300 rounded">
+            </div>
+
+            <div>
+                <label class="block font-semibold text-gray-700">Alamat Lengkap:</label>
+                <textarea name="alamat" required class="w-full px-3 py-2 border border-gray-300 rounded"></textarea>
+            </div>
+
+            <div>
+                <label class="block font-semibold text-gray-700">No. HP:</label>
+                <input type="text" name="no_hp" required class="w-full px-3 py-2 border border-gray-300 rounded">
+            </div>
+
+            <div>
+                <label class="block font-semibold text-gray-700">Pilih Kurir:</label>
+                <select name="id_jasa_kurir" required class="w-full px-3 py-2 border border-gray-300 rounded">
+                    <option value="">-- Pilih Kurir --</option>
+                    <option value="1">JNE</option>
+                    <option value="2">J&T</option>
+                    <option value="3">Sicepat</option>
+                </select>
+            </div>
+
+            <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded font-semibold text-lg">
+                Proses Checkout
+            </button>
+        </form>
     </div>
-
-    <form method="POST">
-        <input type="hidden" name="harga" value="<?= $produk['harga'] ?>">
-
-        <label>Jumlah:</label>
-        <input type="number" name="jumlah_produk" value="1" min="1" required>
-
-        <label>Ukuran:</label>
-        <select name="ukuran" required>
-            <option value="">-- Pilih Ukuran --</option>
-            <?php
-                $ukuran_options = ['M', 'L', 'XL', 'XXL'];
-                foreach ($ukuran_options as $u) {
-                    $selected = ($ukuran == $u) ? 'selected' : '';
-                    echo "<option value='$u' $selected>$u</option>";
-                }
-            ?>
-        </select>
-
-        <label>Catatan:</label>
-        <textarea name="catatan" rows="3"></textarea>
-
-        <label>Nama Lengkap:</label>
-        <input type="text" name="nama_lengkap" required>
-
-        <label>Alamat Lengkap:</label>
-        <textarea name="alamat" required></textarea>
-
-        <label>No. HP:</label>
-        <input type="text" name="no_hp" required>
-
-        <label>Pilih Kurir:</label>
-        <select name="id_jasa_kurir" required>
-            <option value="">-- Pilih Kurir --</option>
-            <option value="1">JNE</option>
-            <option value="2">J&T</option>
-            <option value="3">Sicepat</option>
-        </select>
-
-        <button type="submit">Proses Checkout</button>
-    </form>
-</div>
 </div>
 
 </body>

@@ -11,5 +11,5 @@ if ($aksi === 'tambah') {
 }
 
 mysqli_query($koneksi, $sql);
-header("Location: keranjang.php");
-exit;
+echo "ok"; // output agar AJAX tau berhasil
+?>

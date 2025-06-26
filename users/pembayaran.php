@@ -63,124 +63,70 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <head>
     <meta charset="UTF-8">
     <title>Pembayaran</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f8f9fa;
-        }
-        .container-card {
-            max-width: 600px;
-            margin: 0 50px;
-            padding: 25px;
-            background-color: #fff;
-            border: 1px solid #ddd;
-            border-radius: 12px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
-        .container-card h1 {
-            text-align: center;
-            margin-bottom: 25px;
-        }
-        .produk {
-            display: flex;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        .produk img {
-            width: 100px;
-            border-radius: 8px;
-            margin-right: 15px;
-        }
-        .form-group {
-            margin-bottom: 15px;
-        }
-        label {
-            font-weight: bold;
-        }
-        select, input[type="file"] {
-            width: 100%;
-            padding: 8px;
-            margin-top: 5px;
-        }
-        button {
-            width: 100%;
-            padding: 10px;
-            background-color: #28a745;
-            color: white;
-            font-size: 16px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #218838;
-        }
-        .no-akun {
-            margin-top: 5px;
-            font-size: 0.9em;
-            color: #555;
-            display: none;
+            font-family: 'Poppins', sans-serif;
         }
     </style>
 </head>
-<body>
-    
-    <!-- Header -->
-<?php include "header.php"?>
+<body class="bg-gray-50">
 
-    <div class="pt-28 flex justify-center">
-    <div class="container-card">
-        <h1>Pembayaran</h1>
+<?php include "header.php" ?>
 
-        <div class="produk">
-            <img src="../uploads/<?= $pemesanan['foto'] ?>" alt="<?= $pemesanan['nama'] ?>">
+<div class="pt-28 flex justify-center">
+    <div class="bg-white shadow-lg rounded-lg p-6 w-full max-w-xl">
+        <h1 class="text-2xl font-semibold text-center text-gray-800 mb-6">Pembayaran</h1>
+
+        <div class="flex items-center gap-4 mb-6">
+            <img src="../uploads/<?= $pemesanan['foto'] ?>" alt="<?= $pemesanan['nama'] ?>" class="w-24 h-24 object-cover rounded">
             <div>
-                <h3><?= $pemesanan['nama'] ?></h3>
-                <p>Jumlah: <?= $pemesanan['jumlah_produk'] ?></p>
-                <p>Total Bayar: Rp <?= number_format($pemesanan['total_bayar'], 0, ',', '.') ?></p>
+                <h3 class="text-lg font-semibold text-gray-800"><?= $pemesanan['nama'] ?></h3>
+                <p class="text-sm text-gray-600">Jumlah: <?= $pemesanan['jumlah_produk'] ?></p>
+                <p class="text-sm text-gray-600">Total Bayar: <span class="text-green-600 font-semibold">Rp <?= number_format($pemesanan['total_bayar'], 0, ',', '.') ?></span></p>
             </div>
         </div>
 
-        <form method="POST" enctype="multipart/form-data">
-
-            <div class="form-group">
-                <label for="id_metode_pembayaran">Pilih Metode Pembayaran:</label>
-                <select name="id_metode_pembayaran" id="id_metode_pembayaran" required onchange="tampilkanNoAkun()">
-                    <option value="">--Pilih--</option>
+        <form method="POST" enctype="multipart/form-data" class="space-y-5">
+            <div>
+                <label for="id_metode_pembayaran" class="block text-sm font-medium text-gray-700 mb-1">Pilih Metode Pembayaran:</label>
+                <select name="id_metode_pembayaran" id="id_metode_pembayaran" required onchange="tampilkanNoAkun()" class="w-full border border-gray-300 rounded px-3 py-2">
+                    <option value="">-- Pilih --</option>
                     <?php foreach($metode_pembayaran as $metode): ?>
                         <option value="<?= $metode['id_metode_pembayaran'] ?>" data-noakun="<?= $metode['no_akun'] ?>">
                             <?= strtoupper($metode['provider']) ?>
                         </option>
                     <?php endforeach; ?>
                 </select>
-                <div class="no-akun" id="no_akun"></div>
-            </div>
-            
-            <div class="form-group">
-                <label for="bukti">Upload Bukti Pembayaran:</label>
-                <input type="file" name="bukti" id="bukti" accept="image/*" required>
+                <div class="mt-1 text-sm text-gray-600 hidden" id="no_akun"></div>
             </div>
 
-            <button type="submit">Konfirmasi Pembayaran</button>
+            <div>
+                <label for="bukti" class="block text-sm font-medium text-gray-700 mb-1">Upload Bukti Pembayaran:</label>
+                <input type="file" name="bukti" id="bukti" accept="image/*" required class="block w-full border px-3 py-2 rounded">
+            </div>
+
+            <button type="submit" class="w-full px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition">Konfirmasi Pembayaran</button>
         </form>
     </div>
 </div>
 
-    <script>
-        function tampilkanNoAkun() {
-            const select = document.getElementById('id_metode_pembayaran');
-            const selectedOption = select.options[select.selectedIndex];
-            const noAkun = selectedOption.getAttribute('data-noakun');
-            const noAkunDiv = document.getElementById('no_akun');
+<script>
+function tampilkanNoAkun() {
+    const select = document.getElementById('id_metode_pembayaran');
+    const selectedOption = select.options[select.selectedIndex];
+    const noAkun = selectedOption.getAttribute('data-noakun');
+    const noAkunDiv = document.getElementById('no_akun');
 
-            if(noAkun){
-                noAkunDiv.style.display = 'block';
-                noAkunDiv.innerHTML = "No. Akun: " + noAkun;
-            } else {
-                noAkunDiv.style.display = 'none';
-                noAkunDiv.innerHTML = "";
-            }
-        }
-    </script>
+    if(noAkun){
+        noAkunDiv.style.display = 'block';
+        noAkunDiv.innerHTML = "No. Akun: " + noAkun;
+    } else {
+        noAkunDiv.style.display = 'none';
+        noAkunDiv.innerHTML = "";
+    }
+}
+</script>
+
 </body>
 </html>

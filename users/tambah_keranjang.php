@@ -3,7 +3,12 @@ session_start();
 include "koneksi.php";
 
 // Pastikan user sudah login
-$id_users = $_SESSION['id_users'] ?? 1; // Ganti 1 dengan ID User login jika ada sistem login
+if (!isset($_SESSION['id_users'])) {
+    echo "<script>alert('Silakan login dulu!'); window.location.href='login.php';</script>";
+    exit;
+}
+
+$id_users = $_SESSION['id_users']; // Ambil ID user sebenarnya
 $id_produk = $_GET['id_produk'];
 $ukuran = $_GET['ukuran'] ?? 'M';
 $jumlah = 1; // Default tambah 1 item
