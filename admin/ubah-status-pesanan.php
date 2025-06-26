@@ -29,6 +29,7 @@ $data = mysqli_fetch_assoc($query);
     <select name="status" class="form-select">
         <option value="pending" <?= $data['status'] == 'pending' ? 'selected' : '' ?>>Pending</option>
         <option value="dikemas" <?= $data['status'] == 'dikemas' ? 'selected' : '' ?>>Dikemas</option>
+        <option value="dikirim" <?= $data['status'] == 'dikirim' ? 'selected' : '' ?>>Dikirim</option>
         <option value="diterima" <?= $data['status'] == 'diterima' ? 'selected' : '' ?>>Diterima</option>
         <option value="selesai" <?= $data['status'] == 'selesai' ? 'selected' : '' ?>>Selesai</option>
         <option value="dibatalkan" <?= $data['status'] == 'dibatalkan' ? 'selected' : '' ?>>Dibatalkan</option>
