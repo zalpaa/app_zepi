@@ -18,10 +18,10 @@
     <div class="card shadow p-4" style="width: 100%; max-width: 450px;">
         <h3 class="text-center mb-4">Register</h3>
         <form action="proses_register.php" method="post">
-            <div class="mb-3">
+            <!-- <div class="mb-3">
                 <label for="nama" class="form-label">Nama</label>
                 <input type="text" class="form-control" name="nama" id="nama" required>
-            </div>
+            </div> -->
 
             <div class="mb-3">
                 <label for="username" class="form-label">Username</label>
